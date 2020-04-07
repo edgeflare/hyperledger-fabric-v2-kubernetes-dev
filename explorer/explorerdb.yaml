@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: explorerdb
+  name: explorerdb
+  namespace: org1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: explorerdb
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: explorerdb
+    spec:
+      containers:
+      - image: hyperledger/explorer-db:latest
+        name: explorer-db
+        resources: {}
+        envFrom:
+        - secretRef:
+            name: explorerdb
+        ports:
+        - containerPort: 5432
+      initContainers:
+      - image: hyperledger/explorer-db:latest
+        name: explorer-db-initdb
+        resources: {}
+        envFrom:
+        - secretRef:
+            name: explorerdb
+        command:
+         - "sh"
+         - "-c"
+         - |
+           echo "tmp workaround running init script"
+        #   cp -r /opt/* /docker-entrypoint-initdb.d/
+        #   cd /docker-entrypoint-initdb.d
+        #   ./createdb.sh
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: explorerdb
+  name: explorerdb
+  namespace: org1
+spec:
+  ports:
+  - name: tcp
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: explorerdb
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: explorerdb
+  namespace: org1
+data:
+  DATABASE_DATABASE: ZmFicmljZXhwbG9yZXI=
+  DATABASE_PASSWORD: cGFzc3dvcmQ=
+  DATABASE_USERNAME: aHBwb2M=
+---
