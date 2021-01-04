@@ -22,7 +22,7 @@ spec:
         app: admin
     spec:
       containers:
-      - image: hyperledger/fabric-tools:2.0
+      - image: hyperledger/fabric-tools:2.3
         name: fabric-tools
         command: ["sh", "-c", "while true; do echo $(date); sleep 3600; done"]
         envFrom:
@@ -83,7 +83,7 @@ data:
   FABRIC_LOGGING_SPEC: INFO
   CORE_PEER_ID: ${PEER}.${ORG}
   CORE_PEER_ADDRESS: ${PEER}.${ORG}:7051
-  CORE_PEER_LOCALMSPID: $(echo $(echo ${ORG:0:1} | tr  '[a-z]' '[A-Z]')${ORG:1}MSP)
+  CORE_PEER_LOCALMSPID: $(echo ${ORG}MSP | sed s/o/O/)
   CORE_PEER_TLS_ENABLED: "true"
   CORE_PEER_TLS_CERT_FILE: "/etc/hyperledger/adminmsp/tls/tls.crt"
   CORE_PEER_TLS_KEY_FILE: "/etc/hyperledger/adminmsp/tls/tls.key"

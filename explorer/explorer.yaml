@@ -33,9 +33,9 @@ spec:
             path: tlsca/tlsca-cert.pem
           - key: ca-cert.pem
             path: cacerts/ca-cert.pem
-          - key: client.crt
+          - key: tls.crt
             path: tls/client.crt
-          - key: client.key
+          - key: tls.key
             path: tls/client.key
       containers:
       - image: hyperledger/explorer:latest
@@ -84,8 +84,10 @@ spec:
             "version": "1.0.0",
             "client": {
               "tlsEnable": true,
-              "adminUser": "admin",
-              "adminPassword": "adminpw",
+              "adminCredential": {
+                "id": "admin",
+                "password": "adminpw"
+              },
               "enableAuthentication": false,
               "organization": "Org1MSP",
               "connection": {
@@ -120,7 +122,8 @@ spec:
                 },
                 "signedCert": {
                   "path": "/etc/hyperledger/fabric-peer/adminmsp/signcerts/cert.pem"
-                }
+                },
+                "peers": ["peer0.org1"]
               }
             },
             "peers": {
@@ -136,13 +139,12 @@ spec:
             }
           }
           EOF
-          node $EXPLORER_APP_PATH/main.js
-status: {}
+          cd /opt/explorer
+          npm run app-start && tail -f /dev/null
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   labels:
     app: explorer
   name: explorer
@@ -156,5 +158,3 @@ spec:
   selector:
     app: explorer
   type: ClusterIP
-status:
-  loadBalancer: {}

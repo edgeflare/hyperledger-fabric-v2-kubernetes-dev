@@ -5,6 +5,11 @@
 - kubectl available on path and configured to use a cluster
 - Fabric binaries available on path
 
+
+
+![hyperledger-fabric-network](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/blockchaind/pumls/master/blockchain/hlf-k8s.puml)
+
+
 Launch network
 ```
 ./hlf.sh up

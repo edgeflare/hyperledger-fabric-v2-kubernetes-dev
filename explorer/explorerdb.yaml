@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: explorerdb
   name: explorerdb
@@ -14,7 +13,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: explorerdb
     spec:
@@ -27,22 +25,6 @@ spec:
             name: explorerdb
         ports:
         - containerPort: 5432
-      initContainers:
-      - image: hyperledger/explorer-db:latest
-        name: explorer-db-initdb
-        resources: {}
-        envFrom:
-        - secretRef:
-            name: explorerdb
-        command:
-         - "sh"
-         - "-c"
-         - |
-           echo "tmp workaround running init script"
-        #   cp -r /opt/* /docker-entrypoint-initdb.d/
-        #   cd /docker-entrypoint-initdb.d
-        #   ./createdb.sh
-status: {}
 ---
 apiVersion: v1
 kind: Service
@@ -61,13 +43,10 @@ spec:
   selector:
     app: explorerdb
   type: ClusterIP
-status:
-  loadBalancer: {}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  creationTimestamp: null
   name: explorerdb
   namespace: org1
 data:

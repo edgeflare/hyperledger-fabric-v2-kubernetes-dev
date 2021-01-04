@@ -21,7 +21,7 @@ spec:
         app: orderer
     spec:
       containers:
-      - image: hyperledger/fabric-orderer:2.0
+      - image: hyperledger/fabric-orderer:2.3
         name: fabric-orderer
         envFrom:
         - configMapRef:

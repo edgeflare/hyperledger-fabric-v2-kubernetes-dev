@@ -1,0 +1,85 @@
+@startuml
+skinparam componentStyle uml1
+skinparam handwritten true
+
+!include https://raw.githubusercontent.com/michiel/plantuml-kubernetes-sprites/master/resource/k8s-sprites-unlabeled-25pct.iuml
+cloud #ecf8f8 {
+package org1 #e9ecef {
+  package ca.org1:7054 as caorg1 {
+   component "<$pod>\nfabric-ca" as ca1org1pod
+   component "<$pod>\npostgres" as caorg1pg
+  }
+  package peer1.org1:7051 as peer1org1 {
+   component "<$pod>\npeer" as peer1org1node
+   component "<$pod>\ncouchdb" as peer1org1db
+  }
+  package orderer.org1:7050 as ordorg1 {
+   component "<$pod>\norderer" as ordorg1pod
+  }
+  component [<$secret>\ncrypto\nmaterials] as org1crypto
+  component [<$secret>\nchannel\nartifacts] as org1artifacts
+}
+caorg1 -[hidden]-> peer1org1
+ordorg1pod -[hidden]-> org1crypto
+ordorg1pod -[hidden]-> org1artifacts
+
+package org2 #f8f9fa {
+  package ca.org2:7054 as caorg2 {
+   component "<$pod>\nfabric-ca" as ca1org2pod
+   component "<$pod>\npostgres" as caorg2pg
+  }
+  package peer1.org2:7051 as peer1org2 {
+   component "<$pod>\npeer" as peer1org2node
+   component "<$pod>\ncouchdb" as peer1org2db
+  }
+  package orderer.org2:7050 as ordorg2 {
+   component "<$pod>\norderer" as ordorg2pod
+  }
+  component [<$secret>\ncrypto\nmaterials] as org2crypto
+  component [<$secret>\nchannel\nartifacts] as org2artifacts
+}
+caorg2 -[hidden]-> peer1org2
+ordorg2pod -[hidden]-> org2crypto
+ordorg2pod -[hidden]-> org2artifacts
+
+package org3 #ced4da {
+  package ca.org3:7054 as caorg3 {
+   component "<$pod>\nfabric-ca" as ca1org3pod
+   component "<$pod>\npostgres" as caorg3pg
+  }
+  package peer1.org3:7051 as peer1org3 {
+   component "<$pod>\npeer" as peer1org3node
+   component "<$pod>\ncouchdb" as peer1org3db
+  }
+  package orderer.org3:7050 as ordorg3 {
+   component "<$pod>\norderer" as ordorg3pod
+  }
+  component [<$secret>\ncrypto\nmaterials] as org3crypto
+  component [<$secret>\nchannel\nartifacts] as org3artifacts
+}
+caorg3 -[hidden]-> peer1org3
+ordorg3pod -[hidden]-> org3crypto
+ordorg3pod -[hidden]-> org3artifacts
+
+package org4 #ced4da {
+  package orderer.org4:7050 as ordorg4 {
+    component "<$pod>\norderer" as ordorg4pod
+  }
+}
+
+
+package org5 #adb5bd {
+  package orderer.org5:7050 as ordorg5 {
+    component "<$pod>\norderer" as ordorg5pod
+  }
+}
+
+org1 -[hidden]--> org2
+org1 -[hidden]> org3
+org3 -[hidden]--> org4
+org3 -[hidden]--> org5
+
+}
+
+
+@enduml

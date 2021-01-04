@@ -31,7 +31,7 @@ spec:
         ports:
         - containerPort: 5984
       - name: fabric-peer
-        image: hyperledger/fabric-peer:2.0
+        image: hyperledger/fabric-peer:2.3
         resources: {}
         envFrom:
         - configMapRef:
@@ -84,7 +84,7 @@ data:
   CORE_PEER_ID: ${PEER}
   CORE_PEER_LISTENADDRESS: 0.0.0.0:7051
   CORE_PEER_PROFILE_ENABLED: "true"
-  CORE_PEER_LOCALMSPID: $(echo $(echo ${ORG:0:1} | tr  '[a-z]' '[A-Z]')${ORG:1}MSP)
+  CORE_PEER_LOCALMSPID: $(echo ${ORG}MSP | sed s/o/O/) 
   CORE_PEER_MSPCONFIGPATH: /etc/hyperledger/fabric-peer/msp
 
   # Gossip
