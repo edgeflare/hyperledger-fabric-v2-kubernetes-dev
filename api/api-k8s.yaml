@@ -1,0 +1,122 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hlf-api
+  name: hlf-api
+  namespace: org1
+spec:
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: hlf-api
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hlf-api
+  name: hlf-api
+  namespace: org1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hlf-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: hlf-api
+    spec:
+      volumes:
+        - name: ca-certs
+          secret:
+            secretName: peer0
+            items:
+              - key: ca-cert.pem
+                path: ca-cert.pem
+              - key: tlsca-cert.pem
+                path: tlsca-cert.pem
+      containers:
+        - image: blockchaindio/hlf-api
+          name: hlf-api
+          resources: {}
+          env:
+            - name: HLF_CCP_PATH
+              value: /var/hyperledger/connection.json
+            - name: HLF_MSPID
+              value: Org1MSP
+            - name: HLF_ORG_CA
+              value: ca.org1
+          volumeMounts:
+            - name: ca-certs
+              mountPath: /etc/hyperledger/ca-certs
+          command:
+            - "sh"
+            - "-c"
+            - |
+              mkdir -p /var/hyperledger
+              cd /var/hyperledger
+              cat > /var/hyperledger/connection.json <<EOF
+              {
+                  "name": "hlf-demo-k8s",
+                  "version": "1.0.0",
+                  "client": {
+                      "organization": "Org1",
+                      "connection": {
+                          "timeout": {
+                              "peer": {
+                                  "endorser": "300"
+                              }
+                          }
+                      }
+                  },
+                  "organizations": {
+                      "Org1": {
+                          "mspid": "Org1MSP",
+                          "peers": [
+                              "peer0.org1",
+                              "peer1.org1"
+                          ],
+                          "certificateAuthorities": [
+                              "ca-org1"
+                          ]
+                      }
+                  },
+                  "peers": {
+                      "peer0.org1": {
+                          "url": "grpcs://peer0.org1:7051",
+                          "tlsCACerts": {
+                              "path": "/etc/hyperledger/ca-certs/tlsca-cert.pem"
+                          },
+                          "grpcOptions": {
+                              "ssl-target-name-override": "peer0.org1",
+                              "hostnameOverride": "peer0.org1"
+                          }
+                      }
+                  },
+                  "certificateAuthorities": {
+                      "ca.org1": {
+                          "url": "https://ca.org1:7054",
+                          "caName": "ca-org1",
+                          "tlsCACerts": {
+                              "path": "/etc/hyperledger/ca-certs/ca-cert.pem"
+                          },
+                          "httpOptions": {
+                              "verify": false
+                          }
+                      }
+                  }
+              }
+              EOF
+              cd /app
+              npm run start:prod

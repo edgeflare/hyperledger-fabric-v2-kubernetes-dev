@@ -43,7 +43,7 @@ up)
         createCASecrets ${ORG}
         createAdminSecret ${ORG} ${PEER}
         createChannelArtifactsSecrets ${ORG}
-        createOrgRootTLSCAsSecret ${ORG} 
+        createOrgRootTLSCAsSecret ${ORG}
         sh templates/ca.sh ${ORG} | kubectl apply -f -
 
         for PEER in peer0
@@ -54,7 +54,7 @@ up)
         done
     done
   ;;
-down) 
+down)
   deleteNamespaces
   ;;
 
@@ -69,25 +69,31 @@ do
 done
   ;;
 
-ccInstallApprove)
+ccInstall)
 for ORG in org1 org2 org3
 do
 echo "Installing on ${ORG} peers"
     for PEER in peer0
     do
-    echo "Installing ${CCNAME} on ${PEER}"
+      echo "Installing ${CCNAME} on ${PEER}"
       packageAndInstall ${CCURL} ${CCNAME} | sh -c "kubectl --namespace ${ORG} \
         exec -i $(kubectl -n ${ORG} get pod -l app=admin -o name) -- sh -"
-  
-    if [ "$PEER" = "peer0" ]; then
-    echo "Approving ${CCNAME} for ${ORG}"
-      approve ${CCNAME} ${CHANNEL_ID} | sh -c "kubectl --namespace ${ORG} \
-        exec -i $(kubectl -n ${ORG} get pod -l app=admin -o name) -- sh -"
-    fi
     done
 done
 ;;
 
+ccApprove)
+for ORG in org1 org2 org3
+do
+echo "Installing on ${ORG} peers"
+    for PEER in peer0
+    do
+      echo "Approving ${CCNAME} for ${ORG}"
+      approve ${CCNAME} ${CHANNEL_ID} | sh -c "kubectl --namespace ${ORG} \
+        exec -i $(kubectl -n ${ORG} get pod -l app=admin -o name) -- sh -"
+    done
+done
+;;
 ccCommit)
 ORG=org1
 PEER=peer0
