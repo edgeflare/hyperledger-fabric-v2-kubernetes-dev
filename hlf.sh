@@ -7,7 +7,7 @@ source ./scripts/chaincode.sh
 
 export CHANNEL_PROFILE=AllOrgsChannel # defined in configtx.yaml
 export CHANNEL_ID=allorgs # anything
-export CCURL=github.com/blockchaind/hyperledger-fabric-v2-kubernetes-dev/key-value-chaincode
+export CCURL=github.com/edgeflare/hyperledger-fabric-v2-kubernetes-dev/key-value-chaincode
 export CCNAME=key-value-chaincode
 
 createNamespaces() {

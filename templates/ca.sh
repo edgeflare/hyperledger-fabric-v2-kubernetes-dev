@@ -3,7 +3,6 @@ cat <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: ca
   name: ca
@@ -16,7 +15,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: ca
     spec:
@@ -30,7 +28,6 @@ spec:
         - |
           cp -r /etc/hyperledger/ca-key-cert /etc/hyperledger/fabric-ca
           fabric-ca-server start -d -b admin:adminpw --port 7054 --csr.cn "org1" --csr.hosts "localhost 0.0.0.0 127.0.0.1"
-
         envFrom:
         - configMapRef:
             name: ca

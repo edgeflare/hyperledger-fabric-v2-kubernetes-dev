@@ -1,8 +1,14 @@
 # Hyperledger Fabric v2 with Raft on Kubernetes
 
+[![Demo on YouTube](./fabric-explorer.png)](https://youtu.be/5Wkc097l3rU)
+
+## Limitations
+
+- Requires [Docker](https://docs.docker.com/desktop/install/linux-install/) on Kubernetes node
+
 ## Prerequisites
 
-- Kubernetes cluster with at least 4GB memory and 2 vCPUs (tested on IBM Cloud free tier IKS)
+- Kubernetes cluster with at least 4GB memory and 2 vCPUs
 - kubectl available on path and configured to use a cluster
 - Fabric binaries available on path
 

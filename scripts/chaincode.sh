@@ -1,14 +1,14 @@
 packageAndInstall() {
 CCURL=$1
 CCNAME=$2
-# CCURL="github.com/blockchaind/hyperledger-fabric-v2-kubernetes-dev/key-value-chaincode"
-# CCNAME="keyval"
 LANG=golang
 LABEL=${CCNAME}v1
 cat <<EOF
 echo "getting chaincode for ${ORG} ${PEER}"
-go get -d ${CCURL}
-echo "packaging chaincode for ${ORG} ${PEER}"
+git clone https://github.com/edgeflare/hyperledger-fabric-v2-kubernetes-dev.git /tmp/hlf
+cd /tmp/hlf/key-value-chaincode
+echo "packaging chaincode for ${ORG} ${PEER}" ccInvokeUpdate
+go mod tidy
 peer lifecycle chaincode package ${CCNAME}.tar.gz --path ${CCURL} --lang ${LANG} --label ${LABEL}
 echo "installing chaincode on ${ORG} ${PEER}"
 peer lifecycle chaincode install ${CCNAME}.tar.gz
