@@ -4,7 +4,6 @@ cat <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: admin
   name: admin
@@ -17,7 +16,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: admin
     spec:
@@ -30,7 +28,7 @@ spec:
             name: admin
         volumeMounts:
         - name: dockersocket 
-          mountPath: "/host/var/run/docker.sock"
+          mountPath: "/run/docker.sock"
         - name: admin
           mountPath: "/etc/hyperledger/adminmsp"
         - name: client-root-tlscas
@@ -40,7 +38,7 @@ spec:
       volumes:
       - name: dockersocket
         hostPath:
-          path: "/var/run/docker.sock"
+          path: "/run/docker.sock"
       - name: client-root-tlscas
         secret:
           secretName: client-root-tlscas
@@ -77,7 +75,7 @@ metadata:
   name: admin
   namespace: ${ORG}
 data:
-  CORE_VM_ENDPOINT: "unix:///host/var/run/docker.sock"
+  CORE_VM_ENDPOINT: "unix:///run/docker.sock"
   CORE_PEER_NETWORKID: fabnet
   CORE_PEER_TLS_CLIENTAUTHREQUIRED: "false"
   FABRIC_LOGGING_SPEC: INFO

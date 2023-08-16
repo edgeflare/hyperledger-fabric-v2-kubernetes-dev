@@ -4,7 +4,6 @@ cat <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: ${PEER}
   name: ${PEER}
@@ -31,14 +30,14 @@ spec:
         ports:
         - containerPort: 5984
       - name: fabric-peer
-        image: hyperledger/fabric-peer:2.3
+        image: hyperledger/fabric-peer:2.5.4
         resources: {}
         envFrom:
         - configMapRef:
             name: ${PEER}
         volumeMounts:
         - name: dockersocket 
-          mountPath: "/host/var/run/docker.sock"
+          mountPath: "/run/docker.sock"
         - name: ${PEER}
           mountPath: "/etc/hyperledger/fabric-peer"
         - name: client-root-tlscas
@@ -46,7 +45,7 @@ spec:
       volumes:
       - name: dockersocket
         hostPath:
-          path: "/var/run/docker.sock"
+          path: "/run/docker.sock"
       - name: ${PEER}
         secret:
           secretName: ${PEER}
@@ -76,7 +75,6 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: ${PEER}
   namespace: ${ORG}
 data:
@@ -108,7 +106,7 @@ data:
   CORE_PEER_TLS_CLIENTKEY_FILE: "/etc/hyperledger/fabric-peer/tls/tls.key"
   # Docker
   CORE_PEER_NETWORKID: ${ORG}-fabnet
-  CORE_VM_ENDPOINT: unix:///host/var/run/docker.sock
+  CORE_VM_ENDPOINT: unix:///run/docker.sock
   CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE: "bridge"
   # CouchDB
   CORE_LEDGER_STATE_STATEDATABASE: CouchDB

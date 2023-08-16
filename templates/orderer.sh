@@ -3,7 +3,6 @@ cat <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: orderer
   name: orderer
@@ -16,12 +15,11 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: orderer
     spec:
       containers:
-      - image: hyperledger/fabric-orderer:2.3
+      - image: hyperledger/fabric-orderer:2.5.4
         name: fabric-orderer
         envFrom:
         - configMapRef:
@@ -66,7 +64,6 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: orderer
   namespace: $ORG
 data:

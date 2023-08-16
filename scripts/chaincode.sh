@@ -8,8 +8,11 @@ LABEL=${CCNAME}v1
 cat <<EOF
 echo "getting chaincode for ${ORG} ${PEER}"
 go get -d ${CCURL}
-echo "packaging chaincode for ${ORG} ${PEER}"
-peer lifecycle chaincode package ${CCNAME}.tar.gz --path ${CCURL} --lang ${LANG} --label ${LABEL}
+echo "packaging chaincode for ${ORG} ${PEER}"./hlf.sh ccInvokeUpdate
+git clone https://${CCURL}.git /tmp/hf
+cd /tmp/hf/key-value-chaincode
+go mod tidy
+peer lifecycle chaincode package ${CCNAME}.tar.gz --path . --lang ${LANG} --label ${LABEL}
 echo "installing chaincode on ${ORG} ${PEER}"
 peer lifecycle chaincode install ${CCNAME}.tar.gz
 EOF
