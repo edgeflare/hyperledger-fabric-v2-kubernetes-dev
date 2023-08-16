@@ -28,7 +28,7 @@
     "bcrypt": "^5.0.0",
     "class-validator": "^0.13.1",
     "fabric-ca-client": "^2.2.5",
-    "fabric-network": "^2.2.5",
+    "fabric-network": "^2.2.18",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
